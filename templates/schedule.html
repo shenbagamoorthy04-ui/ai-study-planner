@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Schedule</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="topbar">
+    <a class="brand" href="/dashboard">✦ AI Study Planner</a>
+    <nav class="nav">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/subjects">Subjects</a>
+        <a href="/tasks">Tasks</a>
+        <a href="/timer">Timer</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/recommendations">AI Coach</a>
+        <a href="/logout">Logout</a>
+    </nav>
+</header>
+
+<div class="page">
+
+    <a class="back" href="/dashboard">← Back to Dashboard</a>
+
+    <h1>📅 Study Schedule</h1>
+
+    <p>
+        Your tasks are arranged based on priority and estimated study time.
+    </p>
+
+    {% if tasks %}
+
+        {% for task in tasks %}
+
+        <div class="card">
+
+            <h2>📖 {{ task["subject_name"] }}</h2>
+
+            <h3>{{ task["task_name"] }}</h3>
+
+            <p>
+                ⏱️ Study time:
+                <strong>{{ task["estimated_hours"] }} hours</strong>
+            </p>
+
+            {% if loop.first %}
+                <p>🔥 <strong>Recommended next</strong></p>
+            {% else %}
+                <p>🕐 Recommended after previous task</p>
+            {% endif %}
+
+            <a class="button" href="/timer">
+                Start Timer →
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="card">
+            <h2>🎉 You're all caught up!</h2>
+            <p>Add a new task whenever you're ready.</p>
+            <a class="button" href="/tasks">Add Study Task</a>
+        </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>

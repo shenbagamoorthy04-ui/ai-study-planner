@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subjects | AI Study Planner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="topbar">
+    <a class="brand" href="/dashboard">✦ AI Study Planner</a>
+
+    <nav class="nav">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/schedule">Schedule</a>
+        <a href="/recommendations">AI Coach</a>
+        <a href="/logout">Logout</a>
+    </nav>
+</header>
+
+<div class="page">
+
+    <a class="back" href="/dashboard">← Back to Dashboard</a>
+
+    <h1>📚 My Subjects</h1>
+    <p>Add and manage the subjects you are studying.</p>
+
+    <div class="card">
+
+        <h2>➕ Add Subject</h2>
+
+        <form method="POST">
+
+            <label>Subject Name</label>
+            <input
+                type="text"
+                name="subject_name"
+                placeholder="Example: Python"
+                required
+            >
+
+            <br><br>
+
+            <label>Total Study Hours</label>
+            <input
+                type="number"
+                name="total_hours"
+                placeholder="Example: 20"
+                min="0"
+                step="0.5"
+                required
+            >
+
+            <br><br>
+
+            <button type="submit">Add Subject</button>
+
+        </form>
+
+    </div>
+
+    <div class="card">
+
+        <h2>My Subjects</h2>
+
+        {% if subjects %}
+
+            {% for subject in subjects %}
+
+                {% set total = subject["total_hours"]|float %}
+                {% set completed = subject["completed_hours"]|float %}
+                {% set progress = (completed / total * 100) if total > 0 else 0 %}
+
+                <div class="item">
+
+                    <h2>📖 {{ subject["subject_name"] }}</h2>
+
+                    <p>
+                        {{ "%.1f"|format(completed) }}
+                        /
+                        {{ "%.1f"|format(total) }}
+                        hours completed
+                    </p>
+
+                    <p class="success">
+                        {{ "%.0f"|format(progress) }}% complete
+                    </p>
+
+                    <div class="actions">
+
+                        <a href="/edit_subject/{{ subject['id'] }}">
+                            ✏️ Edit Subject
+                        </a>
+
+                        <form method="POST"
+                              action="/delete_subject/{{ subject['id'] }}"
+                              style="display:inline;">
+
+                            <button type="submit"
+                                    class="delete-button">
+                                🗑 Delete
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>No subjects yet. Add your first subject above.</p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Study Coach</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="topbar">
+    <a class="brand" href="/dashboard">✦ AI Study Planner</a>
+    <nav class="nav">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/subjects">Subjects</a>
+        <a href="/tasks">Tasks</a>
+        <a href="/timer">Timer</a>
+        <a href="/schedule">Schedule</a>
+        <a href="/analytics">Analytics</a>
+        <a href="/logout">Logout</a>
+    </nav>
+</header>
+
+<div class="page">
+
+    <a class="back" href="/dashboard">← Back to Dashboard</a>
+
+    <h1>🤖 AI Study Coach</h1>
+    <p>Personalized recommendations based on your current study plan.</p>
+
+    {% if recommendations %}
+
+        {% for recommendation in recommendations %}
+
+        <div class="card">
+            <h2>💡 Study Recommendation</h2>
+            <p>{{ recommendation }}</p>
+        </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="card">
+            <h2>🎉 Great work!</h2>
+            <p>
+                You currently have no urgent recommendations.
+                Keep maintaining your study routine.
+            </p>
+        </div>
+
+    {% endif %}
+
+    <div class="card">
+        <h2>🚀 Quick Actions</h2>
+
+        <a class="button" href="/timer">⏱️ Start Study Timer</a>
+        <a class="button" href="/tasks">📝 Manage Tasks</a>
+        <a class="button" href="/analytics">📊 View Analytics</a>
+    </div>
+
+</div>
+
+</body>
+</html>

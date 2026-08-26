@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Subject | AI Study Planner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="topbar">
+    <a class="brand" href="/dashboard">✦ AI Study Planner</a>
+
+    <nav class="nav">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/subjects">Subjects</a>
+        <a href="/tasks">Tasks</a>
+        <a href="/logout">Logout</a>
+    </nav>
+</header>
+
+<div class="page">
+
+    <a class="back" href="/subjects">← Back to Subjects</a>
+
+    <div class="card">
+
+        <h1>✏️ Edit Subject</h1>
+
+        <form method="POST">
+
+            <label>Subject Name</label>
+
+            <input
+                type="text"
+                name="subject_name"
+                value="{{ subject['subject_name'] }}"
+                required
+            >
+
+            <br><br>
+
+            <label>Total Study Hours</label>
+
+            <input
+                type="number"
+                name="total_hours"
+                value="{{ subject['total_hours'] }}"
+                min="0"
+                step="0.5"
+                required
+            >
+
+            <br><br>
+
+            <button type="submit">Save Changes</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

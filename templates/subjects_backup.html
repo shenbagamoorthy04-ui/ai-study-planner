@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Subjects | AI Study Planner</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0 15px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #6c4cff;
+            color: white;
+            border: none;
+            padding: 11px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .subject {
+            border-left: 5px solid #6c4cff;
+            padding: 15px;
+            margin: 15px 0;
+            background: #fafafa;
+        }
+
+        a {
+            color: #6c4cff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>📚 My Subjects</h1>
+
+    <p>
+        <a href="/dashboard">← Back to Dashboard</a>
+    </p>
+
+    <div class="card">
+
+        <h2>➕ Add Subject</h2>
+
+        <form method="POST">
+
+            <label>Subject Name:</label>
+
+            <input
+                type="text"
+                name="subject_name"
+                placeholder="Example: Python"
+                required
+            >
+
+            <label>Total Study Hours:</label>
+
+            <input
+                type="number"
+                name="total_hours"
+                min="0"
+                step="0.5"
+                placeholder="Example: 20"
+                required
+            >
+
+            <button type="submit">
+                Add Subject
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>My Subjects</h2>
+
+        {% if subjects %}
+
+           {% for subject in subjects %}
+
+    {% set total = subject["total_hours"]|float %}
+    {% set completed = subject["completed_hours"]|float %}
+    {% set progress = (completed / total * 100) if total > 0 else 0 %}
+
+    <div class="subject">
+
+        <h3>{{ subject["subject_name"] }}</h3>
+
+        <p>
+            <strong>
+                {{ "%.1f"|format(completed) }}
+            </strong>
+            /
+            {{ "%.1f"|format(total) }}
+            hours completed
+        </p>
+
+        <div style="
+            background: #e5e7eb;
+            height: 12px;
+            border-radius: 10px;
+            overflow: hidden;
+        ">
+
+            <div style="
+                background: #6c4cff;
+                height: 100%;
+                width: {{ progress }}%;
+            "></div>
+
+        </div>
+
+        <p>
+            <strong>{{ "%.0f"|format(progress) }}%</strong>
+            complete
+        </p>
+
+    </div>
+
+{% endfor %}
+
+        {% else %}
+
+            <p>
+                📚 You haven't added any subjects yet.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>
+

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Recommendations - AI Study Planner</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f7fb;
+        }
+
+        h1 {
+            color: #222;
+        }
+
+        .recommendation {
+            background: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .recommendation h2 {
+            margin-top: 0;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>🤖 AI Recommendations</h1>
+
+    {% for recommendation in recommendations %}
+
+        <div class="recommendation">
+
+            <h2>💡 Recommendation</h2>
+
+            <p>{{ recommendation }}</p>
+
+        </div>
+
+    {% endfor %}
+
+    {% if not recommendations %}
+
+        <div class="recommendation">
+
+            <h2>🎉 Great Job!</h2>
+
+            <p>
+                You currently have no recommendations.
+                Keep studying and completing your tasks!
+            </p>
+
+        </div>
+
+    {% endif %}
+
+    <a class="back" href="/login">
+        ← Back to Dashboard
+    </a>
+
+</body>
+</html>

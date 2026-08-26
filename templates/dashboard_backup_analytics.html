@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Dashboard | AI Study Planner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+    <div class="app-shell">
+        <header class="topbar">
+            <a class="brand" href="/dashboard" aria-label="AI Study Planner dashboard"><span class="brand-mark">✦</span><span>AI Study Planner</span></a>
+            <nav class="topnav" aria-label="Dashboard navigation">
+                <a class="nav-link active" href="/dashboard">Dashboard</a><a class="nav-link" href="/schedule">Schedule</a><a class="nav-link" href="/recommendations">Recommendations</a><a class="logout-link" href="/logout">Log out</a>
+            </nav>
+        </header>
+        <main class="dashboard">
+            <section class="hero">
+                <div><p class="eyebrow">YOUR LEARNING SPACE</p><h1>Welcome back, {{ student["name"] }} <span aria-hidden="true">👋</span></h1><p class="hero-copy">Keep your momentum going. You are building strong study habits one task at a time.</p><div class="student-meta"><span>🎓 {{ student["course"] }}</span><span>•</span><span>Semester {{ student["semester"] }}</span></div></div>
+                <div class="hero-actions"><a class="button button-secondary" href="/subjects">＋ Add subject</a><a class="button button-primary" href="/tasks">＋ Add study task</a></div>
+            </section>
+            <section class="summary-grid" aria-label="Study overview">
+                <article class="summary-card violet-card"><span class="summary-icon">✓</span><div><p>Completed tasks</p><strong>{{ completed_tasks }}</strong><span>of {{ total_tasks }} total</span></div></article>
+                <article class="summary-card amber-card"><span class="summary-icon">◷</span><div><p>Tasks to do</p><strong>{{ pending_tasks }}</strong><span>{% if pending_tasks == 1 %}task{% else %}tasks{% endif %} waiting</span></div></article>
+                <article class="summary-card blue-card"><span class="summary-icon">◴</span><div><p>Study time</p><strong>{{ "%.1f"|format(completed_study_hours) }}<small>h</small></strong><span>of {{ "%.1f"|format(total_study_hours) }}h planned</span></div></article>
+                <article class="summary-card progress-card"><div class="progress-ring" style="--progress: {{ progress }}"><span>{{ "%.0f"|format(progress) }}%</span></div><div><p>Overall progress</p><strong>On track</strong><span>Keep it going!</span></div></article>
+            </section>
+            <section class="content-grid">
+                <div class="main-column">
+                    <section class="panel subjects-panel">
+                        <div class="section-heading"><div><p class="eyebrow">LEARNING PLAN</p><h2>My subjects</h2></div><a class="text-link" href="/subjects">Manage subjects <span>→</span></a></div>
+                        {% if subjects %}
+                        <div class="subject-list">
+                            {% for subject in subjects %}
+                            {% set subject_total = subject["total_hours"]|float %}{% set subject_completed = subject["completed_hours"]|float %}{% set subject_progress = (subject_completed / subject_total * 100) if subject_total > 0 else 0 %}
+                            <article class="subject-item"><div class="subject-title"><span class="subject-avatar">{{ subject["subject_name"][0]|upper }}</span><div><h3>{{ subject["subject_name"] }}</h3><p>{{ "%.1f"|format(subject_completed) }} of {{ "%.1f"|format(subject_total) }} hours completed</p></div><strong>{{ "%.0f"|format(subject_progress) }}%</strong></div><div class="progress-track" role="progressbar" aria-label="{{ subject["subject_name"] }} progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ subject_progress }}"><span style="width: {{ subject_progress }}%"></span></div></article>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="empty-state"><span>📚</span><h3>Your subjects will appear here</h3><p>Add a subject to start building your learning plan.</p><a class="button button-primary" href="/subjects">Add your first subject</a></div>
+                        {% endif %}
+                    </section>
+                    <section class="panel tasks-panel">
+                        <div class="section-heading"><div><p class="eyebrow">STUDY FOCUS</p><h2>My study tasks</h2></div><a class="text-link" href="/tasks">Add task <span>＋</span></a></div>
+                        {% if tasks %}
+                        <div class="task-list">
+                            {% for task in tasks %}
+                            <article class="task-card {% if task["completed"] == 1 %}is-complete{% endif %}"><div class="task-status">{% if task["completed"] == 1 %}✓{% else %}○{% endif %}</div><div class="task-details"><span class="task-subject">{{ task["subject_name"] }}</span><h3>{{ task["task_name"] }}</h3><p>⏱ {{ "%.1f"|format(task["estimated_hours"]|float) }} hour{% if task["estimated_hours"]|float != 1 %}s{% endif %}</p></div>{% if task["completed"] == 0 %}
+
+<a class="complete-button" href="/complete_task/{{ task['id'] }}">
+    Mark complete
+</a>
+
+<a href="/edit_task/{{ task['id'] }}" style="margin-left:8px;">
+    ✏️ Edit
+</a>
+
+<form method="POST"
+      action="/delete_task/{{ task['id'] }}"
+      style="display:inline;">
+    <button type="submit">🗑 Delete</button>
+</form>
+
+{% else %}
+
+<span class="done-label">Completed</span>
+
+<a href="/edit_task/{{ task['id'] }}" style="margin-left:8px;">
+    ✏️ Edit
+</a>
+
+<form method="POST"
+      action="/delete_task/{{ task['id'] }}"
+      style="display:inline;">
+    <button type="submit">🗑 Delete</button>
+</form>
+
+{% endif %}
+</article>
+                            {% endfor %}
+                        </div>
+                        {% else %}
+                        <div class="empty-state compact"><span>📝</span><h3>No tasks yet</h3><p>Create a focused study task to get started.</p><a class="button button-primary" href="/tasks">Add study task</a></div>
+                        {% endif %}
+                    </section>
+                </div>
+                <aside class="side-column">
+                    <section class="panel schedule-card"><div class="section-heading"><div><p class="eyebrow">PLAN YOUR DAY</p><h2>Study schedule</h2></div><span class="calendar-icon">◫</span></div>{% if pending_tasks > 0 %}<p>You've got <strong>{{ pending_tasks }} pending {% if pending_tasks == 1 %}task{% else %}tasks{% endif %}</strong>. Pick one and make a little progress today.</p>{% else %}<p>You're all caught up. Add a new task whenever you're ready to plan ahead.</p>{% endif %}<a class="button button-outline" href="/schedule">View study schedule <span>→</span></a></section>
+                    <section class="recommendation-card"><div class="ai-orb">✦</div><p class="eyebrow">AI STUDY COACH</p><h2>A smarter way to study</h2><p>Get a personalized next step based on your study plan and progress.</p><a class="button button-light" href="/recommendations">Get recommendations <span>→</span></a></section>
+                    <section class="panel encouragement-card"><span>🌱</span><div><h3>Small steps count</h3><p>Consistent study sessions add up faster than you think.</p></div></section>
+                </aside>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
+
+
+

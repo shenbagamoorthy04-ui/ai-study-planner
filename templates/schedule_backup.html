@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Study Schedule</title>
+</head>
+
+<body>
+
+<h1>⏰ Study Schedule</h1>
+
+<h2>Today's Study Plan</h2>
+
+{% if tasks %}
+
+{% for task in tasks %}
+
+<hr>
+
+<h2>📚 {{ task["subject_name"] }}</h2>
+
+<p>
+    📝 <strong>Task:</strong>
+    {{ task["task_name"] }}
+</p>
+
+<p>
+    ⏱️ <strong>Estimated Time:</strong>
+    {{ task["estimated_hours"] }} hours
+</p>
+
+{% if loop.index == 1 %}
+
+<p>
+    🕐 <strong>Recommended:</strong>
+    6:00 PM – 8:00 PM
+</p>
+
+{% elif loop.index == 2 %}
+
+<p>
+    🕐 <strong>Recommended:</strong>
+    8:15 PM – 10:15 PM
+</p>
+
+{% elif loop.index == 3 %}
+
+<p>
+    🕐 <strong>Recommended:</strong>
+    10:30 PM – 12:30 AM
+</p>
+
+{% else %}
+
+<p>
+    🕐 <strong>Recommended:</strong>
+    Flexible study time
+</p>
+
+{% endif %}
+
+{% if task["completed"] == 1 %}
+
+<p>✅ <strong>Completed</strong></p>
+
+{% else %}
+
+<p>⏳ <strong>Pending</strong></p>
+
+{% endif %}
+
+{% endfor %}
+
+{% else %}
+
+<p>No study tasks available.</p>
+
+<p>Add a study task from the dashboard.</p>
+
+{% endif %}
+
+<hr>
+
+<a href="/login">← Back to Dashboard</a>
+
+</body>
+</html>
