@@ -1,6 +1,9 @@
 import sqlite3
+import os
 
 DATABASE = "data/studyplanner.db"
+
+os.makedirs("data", exist_ok=True)
 
 
 def get_connection():
